@@ -25,7 +25,6 @@ https://leetcode-cn.com/problems/merge-two-binary-trees/
 """
 from tree import TreeNode, Tree
 
-
 # Definition for a binary tree node.
 # class TreeNode:
 #     def __init__(self, x):
