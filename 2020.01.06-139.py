@@ -27,27 +27,11 @@ from typing import List
 
 
 class Solution:
-    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        """
-        又是动态规划
-        dp[i]表示字符串s[:i]能否拆分成符合要求的子字符串
-        """
-        len_dic = len(wordDict)
-        len_str = len(s)
-        dp = [0] * len_str
-        for i in range(len_str):
-            for j in range(len_dic):
-                len_j = len(wordDict[j])
-                if i + 1 >= len_j and wordDict[j] == s[i + 1 - len_j:i + 1] and (
-                        i + 1 - len_j == 0 or dp[i - len_j] == 1):
-                    dp[i] = 1
-                    break
-        return dp[len_str - 1] == 1
 
-    def wordBreak2(self, s: str, wordDict: List[str]) -> bool:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         N = len(s)
         starts = [0]
-        wordDict = set(wordDict)
+        wordDict = set(wordDict)  # 将查找时间变为常数级
         for i in range(1, N + 1):
             for index in starts:
                 if s[index:i] in wordDict:
@@ -55,17 +39,25 @@ class Solution:
                     break
         return starts[-1] == N
 
-    def wordBreak3(self, s: str, wordDict: List[str]) -> bool:
+    def wordBreak2(self, s: str, wordDict: List[str]) -> bool:
+        """
+        和上一个思路一样
+        子数组或者子字符串且求极值的题，基本就是 DP 没差
+        dp[i]表示字符串s[:i]能否拆分成符合要求的子字符串
+        """
         n = len(s)
         dp = [False] * (n + 1)
         dp[0] = True
+        wordDict = set(wordDict)
         for i in range(n):
             for j in range(i + 1, n + 1):
                 if dp[i] and (s[i:j] in wordDict):
                     dp[j] = True
         return dp[-1]
 
-    def wordBreak4(self, s: str, wordDict: List[str]) -> bool:
+    def wordBreak3(self, s: str, wordDict: List[str]) -> bool:
+        """上一个的递归版本"""
+        wordDict = set(wordDict)
         import functools
         @functools.lru_cache(None)  # 递归可以缓存已返回的结果
         def back_track(s):
@@ -82,15 +74,16 @@ class Solution:
 s = "applepenapple"
 wordDict = ["apple", "pen"]
 
-s = "cars"
-wordDict = ["car", "ca", "rs"]
+# s = "cars"
+# wordDict = ["car", "ca", "rs"]
 
 # s = "bb"
 # wordDict = ["a", "b", "bbb", "bbbb"]
 
-# s = "catsandog"
-# wordDict = ["cats", "dog", "sand", "and", "cat"]
+s = "catsandog"
+wordDict = ["cats", "dog", "sand", "and", "cat"]
 
 slt = Solution()
 print(slt.wordBreak(s, wordDict))
 print(slt.wordBreak2(s, wordDict))
+print(slt.wordBreak3(s, wordDict))
